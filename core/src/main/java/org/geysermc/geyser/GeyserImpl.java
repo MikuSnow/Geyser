@@ -33,11 +33,15 @@ import com.github.steveice10.packetlib.tcp.TcpSession;
 import com.nukkitx.network.raknet.RakNetConstants;
 import com.nukkitx.network.util.EventLoops;
 import com.nukkitx.protocol.bedrock.BedrockServer;
+import com.nukkitx.protocol.bedrock.wrapper.BedrockWrapperSerializer;
+import com.nukkitx.protocol.bedrock.wrapper.BedrockWrapperSerializerV9_10;
+import com.nukkitx.protocol.bedrock.wrapper.BedrockWrapperSerializers;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.kqueue.KQueue;
 import io.netty.util.NettyRuntime;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.internal.SystemPropertyUtil;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -78,6 +82,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -137,6 +142,18 @@ public class GeyserImpl implements GeyserApi {
     private Map<String, String> savedRefreshTokens;
 
     private static GeyserImpl instance;
+
+    static {
+        try {
+            final Field field = BedrockWrapperSerializers.class.getDeclaredField("SERIALIZERS");
+            field.setAccessible(true);
+            final Int2ObjectMap<BedrockWrapperSerializer> map = (Int2ObjectMap<BedrockWrapperSerializer>)field.get(BedrockWrapperSerializers.class);
+            map.put(8, BedrockWrapperSerializerV9_10.V10);
+        }
+        catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+    }
 
     private GeyserImpl(PlatformType platformType, GeyserBootstrap bootstrap) {
         instance = this;
