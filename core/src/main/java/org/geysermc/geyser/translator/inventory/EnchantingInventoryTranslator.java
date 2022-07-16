@@ -116,7 +116,11 @@ public class EnchantingInventoryTranslator extends AbstractBlockInventoryTransla
         for (int i = 0; i < enchantingInventory.getEnchantOptions().length; i++) {
             EnchantOptionData enchantData = enchantingInventory.getEnchantOptions()[i];
             if (enchantData != null) {
-                if (craftRecipeData.getRecipeNetworkId() == enchantData.getEnchantNetId()) {
+                int recipeNetworkId = craftRecipeData.getRecipeNetworkId();
+                // TODO 后续需要与网易确定原因
+                // 中国版返回的值 是*128之后的
+                // 需要先减去写包时候的负数数值。
+                if ((((recipeNetworkId + 1) / 128) - 1) == enchantData.getEnchantNetId()) {
                     // Enchant net ID is how we differentiate between what item Bedrock wants
                     javaSlot = enchantingInventory.getGeyserEnchantOptions()[i].getJavaIndex();
                     break;
