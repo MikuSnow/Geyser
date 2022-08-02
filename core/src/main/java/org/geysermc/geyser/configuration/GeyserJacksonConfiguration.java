@@ -275,6 +275,9 @@ public abstract class GeyserJacksonConfiguration implements GeyserConfiguration 
     @JsonProperty("use-direct-connection")
     private boolean useDirectConnection = true;
 
+    @JsonProperty("quick-switch-dimension")
+    private boolean quickSwitchDimension = false;
+
     @JsonProperty("config-version")
     private int configVersion = 0;
 

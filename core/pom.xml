@@ -19,6 +19,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.msgpack</groupId>
+            <artifactId>msgpack</artifactId>
+            <version>0.6.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.28.0-GA</version>
+        </dependency>
+        <dependency>
             <groupId>org.geysermc</groupId>
             <artifactId>ap</artifactId>
             <version>2.0.3-SNAPSHOT</version>

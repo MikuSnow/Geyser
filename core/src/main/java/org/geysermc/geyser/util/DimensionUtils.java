@@ -33,6 +33,7 @@ import com.nukkitx.protocol.bedrock.packet.ChangeDimensionPacket;
 import com.nukkitx.protocol.bedrock.packet.MobEffectPacket;
 import com.nukkitx.protocol.bedrock.packet.StopSoundPacket;
 import org.geysermc.geyser.GeyserImpl;
+import org.geysermc.geyser.configuration.GeyserConfiguration;
 import org.geysermc.geyser.entity.type.Entity;
 import org.geysermc.geyser.session.GeyserSession;
 
@@ -72,7 +73,7 @@ public class DimensionUtils {
         session.getPistonCache().clear();
         session.getSkullCache().clear();
 
-        Vector3f pos = Vector3f.from(0, Short.MAX_VALUE, 0);
+        Vector3f pos = Vector3f.from(0, 64, 0);
 
         ChangeDimensionPacket changeDimensionPacket = new ChangeDimensionPacket();
         changeDimensionPacket.setDimension(bedrockDimension);
@@ -108,11 +109,16 @@ public class DimensionUtils {
         // If the bedrock nether height workaround is enabled, meaning the client is told it's in the end dimension,
         // we check if the player is entering the nether and apply the nether fog to fake the fact that the client
         // thinks they are in the end dimension.
-        if (BEDROCK_NETHER_ID == 2) {
-            if (NETHER.equals(javaDimension)) {
-                session.sendFog("minecraft:fog_hell");
-            } else if (previousDimension == BEDROCK_NETHER_ID) {
-                session.removeFog("minecraft:fog_hell");
+
+        GeyserConfiguration config = GeyserImpl.getInstance().getConfig();
+
+        if (!config.isQuickSwitchDimension()) {
+            if (BEDROCK_NETHER_ID == 2) {
+                if (NETHER.equals(javaDimension)) {
+                    session.sendFog("minecraft:fog_hell");
+                } else if (previousDimension == BEDROCK_NETHER_ID) {
+                    session.removeFog("minecraft:fog_hell");
+                }
             }
         }
     }
